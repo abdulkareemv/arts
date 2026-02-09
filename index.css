@@ -1,0 +1,484 @@
+/* ===== BASE ===== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(180deg, #1a1a2e, #0f3460);
+    color: #fff;
+    text-align: center;
+    animation: fadeIn 1s ease-in;
+}
+
+/* ===== HEADER ===== */
+header {
+    background: linear-gradient(135deg,
+    #ef4444,
+    #22c55e,
+    #3b82f6,
+    #eab308
+  );
+    padding: 20px;
+    color: #fff;
+    font-family: 'Cinzel Decorative', cursive;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    animation: slideDown 1s ease-in-out;
+}
+
+header img {
+    height: 40px;
+}
+.top-banner {
+    width: 70%;
+    height: auto;
+    max-height: 300px;
+    display: block;   /* removes small gaps */
+  margin: 0 auto;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  .top-banner {
+    width: 90%;
+    max-height: 250px;
+  }
+}
+/* ===== HEADINGS ===== */
+h1 {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: 3rem;
+    margin: 10px 0;
+    letter-spacing: 2px;
+}
+
+p {
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+/* ===== CAROUSEL ===== */
+.carousel-container {
+    position: relative;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 900px;
+    height: 400px;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    animation: zoomIn 1.5s ease-out;
+}
+
+.carousel-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+/* ===== TABLE ===== */
+table {
+    width: 90%;
+    max-width: 900px;
+    margin: 25px auto;
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.95);
+    color: #1f2937;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Header */
+th {
+    padding: 14px;
+    background: linear-gradient(90deg, #e11d48, #f59e0b);
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: none;
+}
+
+/* Body cells */
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: 500;
+}
+/* ===== INNER BORDERS ===== */
+th, td {
+  border: 1px solid #e5e7eb; /* light inner borders */
+}
+
+/* Remove outer double border look */
+table {
+  border-collapse: collapse;
+}
+
+/* Header border tweak */
+thead th {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+/* Row separators a bit stronger */
+tbody tr td {
+  border-color: #d1d5db;
+}
+
+/* ===== HEADER COLORS MATCHING NAMES ===== */
+th:nth-child(1) {
+  background: linear-gradient(
+    90deg,
+    #ef4444,
+    #22c55e,
+    #3b82f6,
+    #eab308
+  ); /* Event = mix of all */
+}
+
+th:nth-child(2) {
+  background: linear-gradient(90deg, #dc2626, #ef4444); /* Red */
+}
+
+th:nth-child(3) {
+  background: linear-gradient(90deg, #16a34a, #22c55e); /* Green */
+}
+
+th:nth-child(4) {
+  background: linear-gradient(90deg, #2563eb, #3b82f6); /* Blue */
+}
+
+th:nth-child(5) {
+  background: linear-gradient(90deg, #ca8a04, #eab308); /* Yellow */
+}
+
+
+/* Zebra rows */
+tbody tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+tbody tr:nth-child(odd) {
+    background: #ffffff;
+}
+
+/* Hover effect */
+tbody tr:hover {
+    background: #e0f2fe;
+    transition: background 0.3s ease;
+}
+
+/* Center text */
+th, td {
+    text-align: center;
+}
+
+/* Rounded corners fix */
+table thead tr th:first-child {
+    border-top-left-radius: 14px;
+}
+table thead tr th:last-child {
+    border-top-right-radius: 14px;
+}
+
+
+/* ===== SCORE CARDS ===== */
+.score-card {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 40px 0;
+}
+
+/* Base card */
+.card {
+    padding: 26px 34px;
+    min-height: 95px;
+    min-width: 150px;
+    border-radius: 18px;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+    transition: all 0.4s ease;
+    position: relative;
+    letter-spacing: 0.5px;
+}
+
+/* Hover polish */
+.card:hover {
+    transform: translateY(-6px) scale(1.08);
+}
+
+/* Team colors */
+.red { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.green { background: linear-gradient(135deg, #22c55e, #15803d); }
+.blue { background: linear-gradient(135deg, #3b82f6, #1e40af); }
+.yellow { background: linear-gradient(135deg, #facc15, #a16207); }
+
+/* 🥇 First */
+.first {
+    box-shadow: 0 0 35px rgba(255,215,0,0.9);
+    transform: scale(1.05);
+}
+.first::after {
+    content: "👑";
+    position: absolute;
+    top: -22px;
+    font-size: 1.8rem;
+    animation: pulse 1.6s infinite;
+}
+
+/* 🥈 Second */
+.second {
+    box-shadow: 0 0 25px rgba(220,220,220,0.8);
+}
+
+/* 🥉 Third */
+.third {
+    box-shadow: 0 0 20px rgba(205,127,50,0.7);
+}
+
+/* 4️⃣ Last */
+.last {
+    opacity: 0.65;
+    filter: grayscale(20%);
+}
+
+/* ===== RANK ORDER (POSITIONING) ===== */
+.first  { order: 1; }
+.second { order: 2; }
+.third  { order: 3; }
+.last   { order: 4; }
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+}
+
+
+/* ===== FOOTER ===== */
+footer {
+    background: #111827;
+    color: #fff;
+    padding: 15px;
+    margin-top: 30px;
+    font-size: 0.9rem;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.8); }
+    to { transform: scale(1); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    h1 { font-size: 2.2rem; }
+    .carousel-container { height: 250px; width: 95%; }
+}
+.event-active {
+  background: rgba(34, 197, 94, 0.15); /* soft green */
+  font-weight: 700;
+}
+.score-red {
+  background: rgba(239, 68, 68, 0.18);
+  font-weight: 700;
+}
+
+.score-green {
+  background: rgba(34, 197, 94, 0.18);
+  font-weight: 700;
+}
+
+.score-blue {
+  background: rgba(59, 130, 246, 0.18);
+  font-weight: 700;
+}
+
+.score-yellow {
+  background: rgba(234, 179, 8, 0.18);
+  font-weight: 700;
+}
+.result-table {
+  width: 100%;
+  max-width: 700px;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  font-size: 1.05rem;
+}
+
+.result-table th {
+  padding: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+
+.result-table td {
+  padding: 14px;
+  text-align: center;
+  color: #fff;
+}
+
+.result-table tbody tr {
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.result-table tbody tr:hover {
+  transform: scale(1.02);
+  background: rgba(255,255,255,0.08);
+}
+/* 🥇 Gold row background */
+.gold-row {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 215, 0, 0.18),
+    rgba(255, 215, 0, 0.05)
+  );
+}
+
+/* 🥈 Silver row background */
+.silver-row {
+  background: linear-gradient(
+    90deg,
+    rgba(207, 216, 220, 0.18),
+    rgba(207, 216, 220, 0.05)
+  );
+}
+
+/* 🥉 Bronze row background */
+.bronze-row {
+  background: linear-gradient(
+    90deg,
+    rgba(205, 127, 50, 0.18),
+    rgba(205, 127, 50, 0.05)
+  );
+}
+
+/* Medal rows */
+.gold-row td {
+  color: #ffd700;
+  font-weight: 700;
+   background: linear-gradient(
+    90deg,
+    rgba(255, 215, 0, 0.18),
+    rgba(255, 215, 0, 0.05)
+  );
+}
+
+.silver-row td {
+  color: #cfd8dc;
+  font-weight: 700;
+  background: linear-gradient(
+    90deg,
+    rgba(207, 216, 220, 0.18),
+    rgba(207, 216, 220, 0.05)
+  );
+}
+
+.bronze-row td {
+  color: #cd7f32;
+background: linear-gradient(
+    90deg,
+    rgba(205, 127, 50, 0.18),
+    rgba(205, 127, 50, 0.05)
+  );
+  font-weight: 700;
+}
+.result-table td:nth-child(2),
+.result-table td:nth-child(3) {
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* Mobile friendly */
+@media (max-width: 600px) {
+  .result-table {
+    font-size: 0.95rem;
+  }
+}
+/* ===== EVENT SELECT DROPDOWN ===== */
+#eventSelect {
+  width: 90%;
+  max-width: 400px;
+  margin: 20px auto 30px;
+  display: block;
+
+  padding: 14px 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
+
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+  135deg,
+  #ff0080,
+  #7928ca,
+  #2afadf
+);
+color: #ffffff;
+
+
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+#eventSelect:hover {
+  border-color: #6c63ff;
+}
+
+#eventSelect:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.25);
+}
+
+/* Dropdown options */
+#eventSelect option {
+  background: #1e1e2f;
+  color: #fff;
+  font-size: 1rem;
+}
+
+/* Mobile tweak */
+@media (max-width: 600px) {
+  #eventSelect {
+    font-size: 1rem;
+    padding: 12px 14px;
+  }
+}
+.results-heading {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 15px;
+  background: linear-gradient(90deg, #6c63ff, #ff0080);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
