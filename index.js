@@ -1,255 +1,178 @@
-/* ===== CAROUSEL ===== */
-let index = 0;
-const images = document.querySelectorAll('.carousel-container img');
-
-function carousel() {
-    images.forEach((img, i) => {
-        img.style.display = i === index ? 'block' : 'none';
-    });
-    index = (index + 1) % images.length;
-    setTimeout(carousel, 3000);
-}
-
-/* ===== SCORE BOX ANIMATION ===== */
-function animateScoreBoxes() {
-    const scoreBoxes = document.querySelectorAll('.card');
-    scoreBoxes.forEach((box, i) => {
-        box.style.opacity = 0;
-        setTimeout(() => {
-            box.style.opacity = 1;
-        }, i * 200);
-    });
-}
-
-
 /* ===== GOOGLE SHEET URLs ===== */
-// Score sheet (Sheet name: Score)
-const scoreSheetURL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vR3ZTB0p2mdrZYUGk2WogHSEccBPUB00xV7JZOBTw4LGy4Mv5G9E3ow6L77N5BpqH7J0XhzZEa1bAoZ/pub?gid=0&single=true&output=csv";
 
-// Result sheet (Sheet name: result)
-const resultSheetURL =
-"https://docs.google.com/spreadsheets/d/e/2PACX-1vR3ZTB0p2mdrZYUGk2WogHSEccBPUB00xV7JZOBTw4LGy4Mv5G9E3ow6L77N5BpqH7J0XhzZEa1bAoZ/pub?gid=765466622&single=true&output=csv";
+// SCORE TOTALS
+const totalURL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vSCeGUDYDzVhlJ2HOaxoMmBb2Zy0xssgDqfEWt0UOyNrAwpUxyQ5xBTpcJqfyJ9cZQACCJw033T_lGu/pub?gid=1076387762&single=true&output=csv";
 
-/* ===== FETCH SCORES (Score sheet) ===== */
+// RESULT SHEETS (CSV)
+const onStageURL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vSCeGUDYDzVhlJ2HOaxoMmBb2Zy0xssgDqfEWt0UOyNrAwpUxyQ5xBTpcJqfyJ9cZQACCJw033T_lGu/pub?gid=383908374&single=true&output=csv";
+
+const offStageURL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vSCeGUDYDzVhlJ2HOaxoMmBb2Zy0xssgDqfEWt0UOyNrAwpUxyQ5xBTpcJqfyJ9cZQACCJw033T_lGu/pub?gid=0&single=true&output=csv";
+
+/* ===== FETCH SCORES ===== */
 function fetchScores() {
-    fetch(scoreSheetURL)
-        .then(res => res.text())
-        .then(data => {
-            const rows = data.trim().split("\n").slice(1);
+  fetch(totalURL)
+    .then(res => res.text())
+    .then(text => {
+      const rows = text.trim().split("\n").slice(1);
 
-            let totals = { red: 0, green: 0, blue: 0, yellow: 0 };
-            const tbody = document.querySelector("#resultsTable tbody");
-            tbody.innerHTML = "";
+      const tbody = document.querySelector("#resultsTable tbody");
+      tbody.innerHTML = "";
 
-            rows.forEach(row => {
-                const [event, r, g, b, y] = row.split(",");
+      let finalTotals = { red: 0, green: 0, blue: 0, yellow: 0 };
 
-                totals.red += Number(r) || 0;
-                totals.green += Number(g) || 0;
-                totals.blue += Number(b) || 0;
-                totals.yellow += Number(y) || 0;
+      rows.forEach(r => {
+        const [label, red, green, blue, yellow] = r.split(",");
 
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${event}</td>
-                        <td>${r}</td>
-                        <td>${g}</td>
-                        <td>${b}</td>
-                        <td>${y}</td>
-                    </tr>`;
-            });
+        // Show all rows (On stage / Off stage / Total)
+        tbody.innerHTML += `
+          <tr>
+            <td>${label}</td>
+            <td>${red}</td>
+            <td>${green}</td>
+            <td>${blue}</td>
+            <td>${yellow}</td>
+          </tr>
+        `;
 
-            const tableRows = document.querySelectorAll("#resultsTable tbody tr");
+        // Capture FINAL TOTAL row only
+        if (label.toLowerCase().includes("total")) {
+          finalTotals = {
+            red: +red || 0,
+            green: +green || 0,
+            blue: +blue || 0,
+            yellow: +yellow || 0
+          };
+        }
+      });
 
-            tableRows.forEach(row => {
-                const cells = row.querySelectorAll("td");
-                const eventCell = cells[0];
-                let hasScore = false;
-
-                for (let i = 1; i < cells.length; i++) {
-                    const value = Number(cells[i].textContent.trim()) || 0;
-
-                    cells[i].classList.remove(
-                        "score-red",
-                        "score-green",
-                        "score-blue",
-                        "score-yellow"
-                    );
-
-                    if (value > 0) {
-                        hasScore = true;
-                        const classes = [
-                            null,
-                            "score-red",
-                            "score-green",
-                            "score-blue",
-                            "score-yellow"
-                        ];
-                        cells[i].classList.add(classes[i]);
-                    }
-                }
-
-                eventCell.classList.toggle("event-active", hasScore);
-            });
-
-           animateNumber("redTotal", "Red", totals.red);
-animateNumber("greenTotal", "Green", totals.green);
-animateNumber("blueTotal", "Blue", totals.blue);
-animateNumber("yellowTotal", "Yellow", totals.yellow);
-
-updateRanksWithSound();
-
-        });
-}
-function animateNumber(id, label, newValue) {
-    const el = document.getElementById(id);
-    const oldValue = parseInt(el.dataset.value || 0);
-    const duration = 600;
-    const startTime = performance.now();
-
-    function update(now) {
-        const progress = Math.min((now - startTime) / duration, 1);
-        const value = Math.floor(oldValue + (newValue - oldValue) * progress);
-        el.innerText = `${label}: ${value}`;
-        if (progress < 1) requestAnimationFrame(update);
-        else el.dataset.value = newValue;
-    }
-    requestAnimationFrame(update);
-}
-const rankUpSound = new Audio("rankup.mp3");
-rankUpSound.volume = 0.6;
-
-
-/* ===== FETCH RESULTS (Result sheet) ===== */
-function fetchResults() {
-    fetch(resultSheetURL)
-        .then(res => res.text())
-        .then(data => {
-            const rows = data.trim().split("\n").slice(1);
-
-            const eventSelect = document.getElementById("eventSelect");
-            const resultBox = document.getElementById("resultBox");
-
-            if (!eventSelect || !resultBox) return;
-
-            eventSelect.innerHTML = `<option value="">Select Event</option>`;
-            const results = {};
-
-            rows.forEach(row => {
-                // ✅ FIXED CSV parsing (spaces are SAFE now)
-                const cols = row
-                    .match(/("([^"]|"")*"|[^,]+)(?=,|$)/g)
-                    .map(v => v.replace(/^"|"$/g, "").trim());
-
-                if (cols.length < 7) return;
-
-                const [
-                    event,
-                    first, firstDept,
-                    second, secondDept,
-                    third, thirdDept
-                ] = cols;
-
-                results[event] = {
-                    first, firstDept,
-                    second, secondDept,
-                    third, thirdDept
-                };
-
-                const opt = document.createElement("option");
-                opt.value = event;
-                opt.textContent = event;
-                eventSelect.appendChild(opt);
-            });
-
-            eventSelect.onchange = () => {
-                const r = results[eventSelect.value];
-                if (!r) {
-                    resultBox.innerHTML = "";
-                    return;
-                }
-
-                const eventName = eventSelect.value;
-
-resultBox.innerHTML = `
-  <h2 class="event-winners-heading">
-    ${eventName} Winners
-  </h2>
-
-  <table class="result-table">
-
-                    <thead>
-                      <tr>
-                        <th>Medal</th>
-                        <th>Winners</th>
-                        <th>Department</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="gold-row">
-                        <td>🥇 Gold</td>
-                        <td>${r.first}</td>
-                        <td>${r.firstDept}</td>
-                      </tr>
-                      <tr class="silver-row">
-                        <td>🥈 Silver</td>
-                        <td>${r.second}</td>
-                        <td>${r.secondDept}</td>
-                      </tr>
-                      <tr class="bronze-row">
-                        <td>🥉 Bronze</td>
-                        <td>${r.third}</td>
-                        <td>${r.thirdDept}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                `;
-            };
-        });
-}
-let lastOrder = [];
-
-function updateRanksWithSound() {
-    const cards = [
-        document.getElementById("redTotal"),
-        document.getElementById("greenTotal"),
-        document.getElementById("blueTotal"),
-        document.getElementById("yellowTotal")
-    ];
-
-    cards.forEach(c => c.classList.remove("first","second","third","last"));
-
-    const sorted = [...cards].sort((a, b) =>
-        parseInt(b.dataset.value || 0) - parseInt(a.dataset.value || 0)
-    );
-
-    const newOrder = sorted.map(c => c.id);
-
-    if (lastOrder.length && newOrder[0] !== lastOrder[0]) {
-        rankUpSound.currentTime = 0;
-        rankUpSound.play();
-    }
-
-    sorted[0]?.classList.add("first");
-    sorted[1]?.classList.add("second");
-    sorted[2]?.classList.add("third");
-    sorted[3]?.classList.add("last");
-
-    lastOrder = newOrder;
+      // 🎯 SCORE CARD (ONLY TOTAL)
+      redTotal.innerText = `Red: ${finalTotals.red}`;
+      greenTotal.innerText = `Green: ${finalTotals.green}`;
+      blueTotal.innerText = `Blue: ${finalTotals.blue}`;
+      yellowTotal.innerText = `Yellow: ${finalTotals.yellow}`;
+    });
 }
 
- 
 
+/* ===== RESULT DATA ===== */
+let onStageResults = [];
+let offStageResults = [];
+
+/* ===== FETCH CSV ===== */
+async function fetchCSV(url) {
+  const res = await fetch(url);
+  const text = await res.text();
+
+  return text
+    .trim()
+    .split("\n")
+    .slice(1)
+    .map(r => r.split(",").map(c => c.replace(/\r/g, "").trim()));
+}
+
+/* ===== LOAD RESULTS ===== */
+async function loadResults() {
+  const onRows = await fetchCSV(onStageURL);
+  const offRows = await fetchCSV(offStageURL);
+
+  onStageResults = filterResults(onRows);
+  offStageResults = filterResults(offRows);
+
+  populateDropdowns();
+}
+/* ===== FILTER PUBLISHED ===== */
+function filterResults(rows) {
+  return rows
+    .filter(r => (r[8] || "").trim().toLowerCase() === "published")
+    .map(r => ({
+      item: r[1] || "—",
+      type: (r[9] || "Individual").trim(), // fallback
+      winners: {
+        first:  { name: r[2] || "-", dept: r[3] || "-" },
+        second: { name: r[4] || "-", dept: r[5] || "-" },
+        third:  { name: r[6] || "-", dept: r[7] || "-" }
+      }
+    }));
+}
+
+
+/* ===== DROPDOWNS ===== */
+function populateDropdowns() {
+  const onSel = document.getElementById("onStageSelect");
+  const offSel = document.getElementById("offStageSelect");
+
+  onSel.innerHTML = `<option value="">Select On Stage Item</option>`;
+  offSel.innerHTML = `<option value="">Select Off Stage Item</option>`;
+
+  onStageResults.forEach((r, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = r.item;
+    onSel.appendChild(opt);
+  });
+
+  offStageResults.forEach((r, i) => {
+    const opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = r.item;
+    offSel.appendChild(opt);
+  });
+}
+
+/* ===== RENDER RESULT ===== */
+function renderResult(result, box, category) {
+  box.innerHTML = `
+    <div class="result-card">
+      <div class="item-name">${result.item}</div>
+
+      <table class="result-table">
+        <thead>
+          <tr>
+            <th>Medal</th>
+            <th>Winner(s)</th>
+            <th>Dept</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="gold">
+            <td>🥇 Gold</td>
+            <td>${result.winners.first.name}</td>
+            <td>${result.winners.first.dept}</td>
+          </tr>
+          <tr class="silver">
+            <td>🥈 Silver</td>
+            <td>${result.winners.second.name}</td>
+            <td>${result.winners.second.dept}</td>
+          </tr>
+          <tr class="bronze">
+            <td>🥉 Bronze</td>
+            <td>${result.winners.third.name}</td>
+            <td>${result.winners.third.dept}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+
+/* ===== EVENTS ===== */
+onStageSelect.addEventListener("change", e => {
+  const r = onStageResults[e.target.value];
+  if (r) renderResult(r, onStageResultBox, "On Stage");
+});
+
+offStageSelect.addEventListener("change", e => {
+  const r = offStageResults[e.target.value];
+  if (r) renderResult(r, offStageResultBox, "Off Stage");
+});
 
 /* ===== INIT ===== */
-document.addEventListener('DOMContentLoaded', () => {
-    carousel();
-    animateScoreBoxes();
-
-    fetchScores();
-    fetchResults();
-
-    setInterval(fetchScores, 10000);   // score auto-update
-    setInterval(fetchResults, 10000);  // result auto-update
+document.addEventListener("DOMContentLoaded", () => {
+  fetchScores();
+  loadResults();
+  setInterval(fetchScores, 10000);
 });
